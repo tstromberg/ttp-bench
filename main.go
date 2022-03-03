@@ -3,32 +3,34 @@ package main
 import (
 	"flag"
 	"os"
+	"os/exec"
 
-	"github.com/tstromberg/ioc-bench/pkg/simulate"
 	"k8s.io/klog/v2"
 )
-
-type errFunc func() error
 
 func main() {
 	klog.InitFlags(nil)
 	flag.Parse()
 
-	checks := []errFunc{
-		simulate.GCloudCredentialsTheft,
-		simulate.CookieTheft,
-		simulate.TruncateBashHistory,
-		simulate.DNSOverHTTPS,
-		simulate.ResolveRandom,
+	checks := []string{
+		"cnc-dns-over-https",
+		"cnc-resolve-random",
+		"creds-browser-cookies",
+		"creds-gcp-exfil",
+		"evade-bash-history",
 	}
-
 	failed := 0
 	for i, c := range checks {
-		if err := c(); err != nil {
+		klog.Infof("#%d: testing %s ...", i, c)
+		cmd := exec.Command("go", "run", "./cmd/"+c)
+		cmd.Stdin = os.Stdin
+		cmd.Stderr = os.Stderr
+		cmd.Stdout = os.Stdout
+		if err := cmd.Run(); err != nil {
 			klog.Errorf("#%d: check failed: %v", i, err)
 			failed++
 		} else {
-			klog.Infof("#%d: check complete", i)
+			klog.Infof("#%d: %s check complete", i, c)
 		}
 	}
 

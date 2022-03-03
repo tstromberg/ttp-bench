@@ -25,9 +25,9 @@ func DNSOverHTTPS() error {
 		}
 
 		host := fmt.Sprintf("%s.blogspot.com", hex.EncodeToString(bytes))
-		klog.Infof("looking up %s ...", host)
+		klog.Infof("looking up TXT record for %s ...", host)
 
-		_, err := c.Query(ctx, dns.Domain(host), dns.TypeA)
+		_, err := c.Query(ctx, dns.Domain(host), dns.TypeTXT)
 		if err != nil {
 			return fmt.Errorf("query: %w", err)
 		}
