@@ -20,7 +20,7 @@ For the few checks that require root, you will be prompted for a password.
 * `creds-keylogger`: Simulate theft of credentials via key logging [T1056](https://attack.mitre.org/techniques/T1056/001/)
 * `creds-sniff`: Simulates theft of credentials via network sniffing [T1040](https://attack.mitre.org/techniques/T1040/)
 
-* `evade-bash-history`: Simulates cleanup via bash_history truncation (T1070.003)[<https://attack.mitre.org/techniques/T1070/003/>
+* `evade-bash-history`: Simulates cleanup via bash_history truncation [T1070.003](https://attack.mitre.org/techniques/T1070/003/)
 * `evade-deleted-service`: Simulates a service running by a binary which no longer exists
 * `evade-masquerade-kthreadd`: Simulates process masquerading as a kernel thread [T1036.004](https://attack.mitre.org/versions/v10/techniques/T1036/004/)
 * `evade-var-tmp`: Simulates tool transfer using curl & running from /var/tmp/. [T1036.005](https://attack.mitre.org/versions/v10/techniques/T1036/005/), [T1105](https://attack.mitre.org/versions/v10/techniques/T1105/)
