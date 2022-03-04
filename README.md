@@ -1,6 +1,10 @@
 # ioc-bench
 
-Benchmark for common indicators of compromise
+A crude benchmark for malware detection and intrusion detection systems.
+
+ioc-bench simulates a number of popular indicators of compromise from the MITRE ATT&CK framework, biasing toward those seen in more recent attacks.
+
+How many of these simulations does your vendor detect?
 
 ## Usage
 
