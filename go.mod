@@ -3,12 +3,14 @@ module github.com/tstromberg/ioc-bench
 go 1.17
 
 require (
+	github.com/MarinX/keylogger v0.0.0-20210528193429-a54d7834cc1a // indirect
 	github.com/bobesa/go-domain-util v0.0.0-20190911083921-4033b5f7dd89 // indirect
 	github.com/go-ini/ini v1.62.0 // indirect
 	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/go-sqlite/sqlite3 v0.0.0-20180313105335-53dd8e640ee7 // indirect
 	github.com/godbus/dbus v4.1.0+incompatible // indirect
 	github.com/gonuts/binary v0.2.0 // indirect
+	github.com/google/gopacket v1.1.19 // indirect
 	github.com/keybase/go-keychain v0.0.0-20200502122510-cda31fe0c86d // indirect
 	github.com/likexian/doh-go v0.6.4 // indirect
 	github.com/likexian/gokit v0.21.11 // indirect

@@ -1,37 +1,73 @@
 package main
 
 import (
+	"context"
 	"flag"
 	"os"
 	"os/exec"
+	"strings"
+	"time"
 
 	"k8s.io/klog/v2"
+)
+
+var (
+	execTimeout = 65 * time.Second
 )
 
 func main() {
 	klog.InitFlags(nil)
 	flag.Parse()
 
-	checks := []string{
-		"cnc-dns-over-https",
-		"cnc-resolve-random",
-		"creds-browser-cookies",
-		"creds-gcp-exfil",
-		"evade-bash-history",
-	}
 	failed := 0
+	checks := []string{}
+	dirs, err := os.ReadDir("cmd")
+	if err != nil {
+		klog.Exitf("readdir failed: %v", err)
+	}
+
+	for _, d := range dirs {
+		checks = append(checks, d.Name())
+	}
+
+	su, err := exec.LookPath("doas")
+	if err != nil {
+		su, err = exec.LookPath("sudo")
+		if err != nil {
+			su = "su"
+		}
+	}
+
+	klog.Infof("found %d checks: %v", len(checks), checks)
+	klog.Infof("giving each check %s to execute", execTimeout)
 	for i, c := range checks {
+		ctx, cancel := context.WithTimeout(context.Background(), execTimeout)
+		defer cancel()
+
 		klog.Infof("#%d: testing %s ...", i, c)
-		cmd := exec.Command("go", "run", "./cmd/"+c)
+		cmd := exec.CommandContext(ctx, "go", "build", "./cmd/"+c)
+		if err := cmd.Run(); err != nil {
+			klog.Errorf("#%d: build failed: %v", i, err)
+			failed++
+			continue
+		}
+		klog.Infof("#%d: %s build complete", i, c)
+
+		cmd = exec.CommandContext(ctx, "./"+c)
+		if strings.HasSuffix(c, "-root") {
+			klog.Infof("root required for %s - will prompt", c)
+			cmd = exec.CommandContext(ctx, su, "./"+c)
+		}
+
 		cmd.Stdin = os.Stdin
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
 		if err := cmd.Run(); err != nil {
 			klog.Errorf("#%d: check failed: %v", i, err)
 			failed++
-		} else {
-			klog.Infof("#%d: %s check complete", i, c)
+			continue
 		}
+		klog.Infof("#%d: %s check complete", i, c)
 	}
 
 	if failed > 0 {
