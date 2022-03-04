@@ -5,6 +5,7 @@ go 1.17
 require (
 	github.com/MarinX/keylogger v0.0.0-20210528193429-a54d7834cc1a // indirect
 	github.com/bobesa/go-domain-util v0.0.0-20190911083921-4033b5f7dd89 // indirect
+	github.com/erikdubbelboer/gspt v0.0.0-20210805194459-ce36a5128377 // indirect
 	github.com/go-ini/ini v1.62.0 // indirect
 	github.com/go-logr/logr v1.2.0 // indirect
 	github.com/go-sqlite/sqlite3 v0.0.0-20180313105335-53dd8e640ee7 // indirect
