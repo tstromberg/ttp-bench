@@ -21,7 +21,7 @@ For the few checks that require root, you will be prompted for a password.
 
 ## Implemented
 
-* `access-chrome-breakout`: Simulates an overflow where Google Chrome spawns a shell [T1189](https://attack.mitre.org/techniques/T1189/)
+* `access-chrome-breakout-root`: Simulates an overflow where Google Chrome spawns a shell [T1189](https://attack.mitre.org/techniques/T1189/)
 
 * `cnc-resolve-random`: Simulates C&C discovery via randomized hostname lookups (Aquatic Panda)
 * `cnc-dns-over-https`: Simulates C&C discovery via DNS over HTTPS (Godlua)
