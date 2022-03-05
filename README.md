@@ -10,7 +10,7 @@ How many of these simulations does your vendor detect?
 
 ## Requirements
 
-* Linux (this iteration is not yet portable)
+* A UNIX-like operating system (so far, it has only been tested on Linux)
 * The Go Programming language
 
 ## Usage
