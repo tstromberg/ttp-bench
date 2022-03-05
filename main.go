@@ -40,12 +40,17 @@ func main() {
 
 	klog.Infof("found %d checks: %v", len(checks), checks)
 	klog.Infof("giving each check %s to execute", execTimeout)
+
+	if err := os.Chdir("out"); err != nil {
+		klog.Exitf("chdir out: %v", err)
+	}
+
 	for i, c := range checks {
 		ctx, cancel := context.WithTimeout(context.Background(), execTimeout)
 		defer cancel()
 
 		klog.Infof("#%d: testing %s ...", i, c)
-		cmd := exec.CommandContext(ctx, "go", "build", "./cmd/"+c)
+		cmd := exec.CommandContext(ctx, "go", "build", "../cmd/"+c)
 		if err := cmd.Run(); err != nil {
 			klog.Errorf("#%d: build failed: %v", i, err)
 			failed++
