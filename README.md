@@ -33,7 +33,7 @@ For the few checks that require root, you will be prompted for a password.
 
 * `evade-bash-history`: Simulates cleanup via bash_history truncation [T1070.003](https://attack.mitre.org/techniques/T1070/003/)
 * `evade-deleted-service`: Simulates a service running by a binary which no longer exists
-* `evade-masquerade-kthreadd`: Simulates process masquerading as a kernel thread [T1036.004](https://attack.mitre.org/versions/v10/techniques/T1036/004/)
+* `evade-masquerade-kernel-thread`: Simulates process masquerading as a kernel thread [T1036.004](https://attack.mitre.org/versions/v10/techniques/T1036/004/)
 * `evade-var-tmp`: Simulates tool transfer using curl & running from /var/tmp/. [T1036.005](https://attack.mitre.org/versions/v10/techniques/T1036/005/), [T1105](https://attack.mitre.org/versions/v10/techniques/T1105/)
 * `evade-usr-bin`: Simulates program installing itself into /usr/bin [T1036.005](https://attack.mitre.org/versions/v10/techniques/T1036/005/)
 
