@@ -41,6 +41,10 @@ func main() {
 	klog.Infof("found %d checks: %v", len(checks), checks)
 	klog.Infof("giving each check %s to execute", execTimeout)
 
+	if err := os.MkdirAll("out", 0o700); err != nil {
+		klog.Exitf("mkdir out: %v", err)
+	}
+
 	if err := os.Chdir("out"); err != nil {
 		klog.Exitf("chdir out: %v", err)
 	}
