@@ -22,6 +22,13 @@ func TruncateBashHistory() error {
 		return fmt.Errorf("copy: %w", err)
 	}
 
+	defer func() {
+		klog.Infof("restoring %s ...", path)
+		if err := cp.Copy(path+".bak", path); err != nil {
+			klog.Errorf("unable to restore %s: %v", path, err)
+		}
+	}()
+
 	time.Sleep(1 * time.Second)
 	klog.Infof("Truncating %s ...", path)
 
@@ -36,7 +43,5 @@ func TruncateBashHistory() error {
 
 	klog.Infof("stat: %+v", s)
 	time.Sleep(1 * time.Second)
-
-	klog.Infof("restoring %s ...", path)
-	return cp.Copy(path+".bak", path)
+	return nil
 }
