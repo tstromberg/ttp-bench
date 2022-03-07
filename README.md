@@ -37,15 +37,17 @@ For the few checks that require root, you will be prompted for a password.
 * `evade-var-tmp`: Simulates tool transfer using curl & running from /var/tmp/. [T1036.005](https://attack.mitre.org/versions/v10/techniques/T1036/005/), [T1105](https://attack.mitre.org/versions/v10/techniques/T1105/)
 * `evade-usr-bin`: Simulates program installing itself into /usr/bin [T1036.005](https://attack.mitre.org/versions/v10/techniques/T1036/005/)
 
-* `exec-bash-reverse-shell`
-* `exec-python-reverse-shell`
-* `exec-netcat-reverse-shell`
-* `exec-netcat-listen`: <https://attack.mitre.org/techniques/T1059/004/>
+* `exec-bash-reverse-shell`: Simulate a reverse shell using bash
+* `exec-python-reverse-shell`: Simulate a reverse shell using Python
+* `exec-netcat-reverse-shell`: Simulate a reverse shell using netcat
+* `exec-netcat-listen`: Simulate setting netcat up to listen on a a port [T1059.004](https://attack.mitre.org/techniques/T1059/004/)
+* `exec-drop-eicar`: Simulate droppping an EICAR test file in a temp directory
 
-* `persist-iptables`: Simulates iptables changes
+* `persist-iptables`: Simulates iptables changes to allow incoming traffic
 
 ## Planned
 
 * `exec-cron-reboot`: <https://attack.mitre.org/techniques/T1053/003/>
 * `exfil-web-service`: <https://attack.mitre.org/techniques/T1567/><https://attack.mitre.org/versions/v10/techniques/T1560/002/>
 * `exfil-non-web-port`: Simulates data exfil on a non-HTTPS port
+* `exfil-over-dns`: Simulates data exfil over DNS packets
