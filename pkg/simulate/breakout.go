@@ -47,7 +47,9 @@ func ReplaceAndLaunch(src string, dest string, args string) error {
 
 	defer func() {
 		log.Printf("restoring %s ...", dest)
-		os.Rename(dest+".bak", dest)
+		if err := os.Rename(dest+".iocbak", dest); err != nil {
+			log.Fatalf("unable to restore: %v", err)
+		}
 	}()
 
 	log.Printf("populating %s ...", dest)
