@@ -55,8 +55,9 @@ func main() {
 
 		klog.Infof("#%d: testing %s ...", i, c)
 		cmd := exec.CommandContext(ctx, "go", "build", "../cmd/"+c)
-		if err := cmd.Run(); err != nil {
-			klog.Errorf("#%d: build failed: %v", i, err)
+		out, err := cmd.CombinedOutput()
+		if err != nil {
+			klog.Errorf("#%d: build failed: %v\n%s", i, err, out)
 			failed++
 			continue
 		}
