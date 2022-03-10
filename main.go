@@ -22,6 +22,8 @@ func main() {
 	flag.Parse()
 
 	ctx := context.Background()
+
+	announce("gathering choices ...")
 	choices, err := gatherChoices(ctx)
 	if err != nil {
 		klog.Fatalf("gather choices: %v", err)
@@ -119,10 +121,15 @@ func runSimulations(ctx context.Context, checks []string) error {
 			continue
 		}
 
+		title := c
+		if strings.HasSuffix(c, "-root") {
+			title = c + " (will prompt for root password)"
+		}
+		announce(title)
+
 		ctx, cancel := context.WithTimeout(context.Background(), execTimeout)
 		defer cancel()
 
-		klog.Infof("#%d: testing %s ...", i, c)
 		cmd := exec.CommandContext(ctx, "./"+c)
 		if strings.HasSuffix(c, "-root") {
 			klog.Infof("root required for %s - will prompt", c)
@@ -137,7 +144,6 @@ func runSimulations(ctx context.Context, checks []string) error {
 			failed++
 			continue
 		}
-		klog.Infof("#%d: %s check complete", i, c)
 	}
 
 	if failed > 0 {
