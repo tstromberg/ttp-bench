@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/charmbracelet/lipgloss"
 	"k8s.io/klog/v2"
 )
 
@@ -24,29 +25,29 @@ func main() {
 
 	ctx := context.Background()
 
-	p := createSpinner("Inspecting available simulations ...")
+	var style = lipgloss.NewStyle().
+		Bold(true).
+		Foreground(lipgloss.Color("#7D56F4")).
+		MarginTop(1).
+		PaddingLeft(4).
+		PaddingRight(4).
+		Width(termWidth())
+
+	fmt.Println(style.Render("Processing simulation data ..."))
+
 	choices, err := gatherChoices(ctx)
 	if err != nil {
 		klog.Fatalf("gather choices: %v", err)
 	}
-	p.Quit()
 
 	selected, err := selectChoices(ctx, choices)
 	if err != nil {
 		klog.Fatalf("show choices: %v", err)
 	}
 
-	p = createSpinner(fmt.Sprintf("Building %d simulations ...", len(selected)))
 	if err = buildSimulations(ctx, selected); err != nil {
 		klog.Exitf("run failed: %v", err)
 	}
-	p.Quit()
-
-	p = createSpinner(fmt.Sprintf("Executing %d simulations ...", len(selected)))
-	// Quit because we announce the simulations differently
-	time.Sleep(500 * time.Millisecond)
-	p.Quit()
-	fmt.Println("")
 
 	if err = runSimulations(ctx, selected); err != nil {
 		klog.Exitf("run failed: %v", err)
