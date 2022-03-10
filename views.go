@@ -11,6 +11,7 @@ import (
 	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"golang.org/x/crypto/ssh/terminal"
 )
 
 var (
@@ -93,9 +94,12 @@ func (m model) View() string {
 	return docStyle.Render(m.list.View())
 }
 
-func showChoices(_ context.Context, choices []choice) ([]string, error) {
+func selectChoices(_ context.Context, choices []choice) ([]choice, error) {
 	items := []list.Item{}
+	byName := map[string]choice{}
+
 	for _, c := range choices {
+		byName[c.name] = c
 		items = append(items, c)
 		selected[c.name] = true
 	}
@@ -112,15 +116,26 @@ func showChoices(_ context.Context, choices []choice) ([]string, error) {
 		os.Exit(1)
 	}
 
-	names := []string{}
+	sChoices := []choice{}
 	for name, enabled := range selected {
 		if enabled {
-			names = append(names, name)
+			sChoices = append(sChoices, byName[name])
 		}
 	}
 
-	sort.Strings(names)
-	return names, nil
+	sort.SliceStable(sChoices, func(i, j int) bool {
+		return sChoices[i].name < sChoices[j].name
+	})
+
+	return sChoices, nil
+}
+
+func termWidth() int {
+	width, _, _ := terminal.GetSize(0)
+	if width < 1 {
+		return 78
+	}
+	return width
 }
 
 func announce(title string) {
@@ -130,7 +145,30 @@ func announce(title string) {
 		Background(lipgloss.Color("#7D56F4")).
 		MarginTop(1).
 		PaddingLeft(4).
-		PaddingRight(4)
+		PaddingRight(4).
+		Width(termWidth())
+
+	fmt.Println(style.Render(title))
+}
+
+func subtitle(title string) {
+	var style = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#999999")).
+		Background(lipgloss.Color("#3D16A4")).
+		PaddingLeft(4).
+		PaddingRight(4).
+		Width(termWidth())
+
+	fmt.Println(style.Render(title))
+}
+
+func notice(title string) {
+	var style = lipgloss.NewStyle().
+		Foreground(lipgloss.Color("#FFFF00")).
+		Background(lipgloss.Color("#551111")).
+		PaddingLeft(4).
+		PaddingRight(4).
+		Width(termWidth())
 
 	fmt.Println(style.Render(title))
 }
@@ -179,9 +217,9 @@ func (m spinModel) View() string {
 	if m.err != nil {
 		return m.err.Error()
 	}
-	str := fmt.Sprintf("\n\n   %s %s\n\n", m.spinner.View(), m.text)
+	str := fmt.Sprintf("\n%s %s\n", m.spinner.View(), m.text)
 	if m.stop {
-		return str + "\n"
+		return str + "\n\n"
 	}
 	return str
 }

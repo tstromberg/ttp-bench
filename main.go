@@ -15,6 +15,7 @@ import (
 var (
 	execTimeout  = 70 * time.Second
 	buildTimeout = 45 * time.Second
+	timeFormat   = "2006-01-02 15:04:05.999"
 )
 
 func main() {
@@ -30,7 +31,7 @@ func main() {
 	}
 	p.Quit()
 
-	selected, err := showChoices(ctx, choices)
+	selected, err := selectChoices(ctx, choices)
 	if err != nil {
 		klog.Fatalf("show choices: %v", err)
 	}
@@ -43,8 +44,9 @@ func main() {
 
 	p = createSpinner(fmt.Sprintf("Executing %d simulations ...", len(selected)))
 	// Quit because we announce the simulations differently
-	time.Sleep(5 * time.Millisecond)
+	time.Sleep(500 * time.Millisecond)
 	p.Quit()
+	fmt.Println("")
 
 	if err = runSimulations(ctx, selected); err != nil {
 		klog.Exitf("run failed: %v", err)
@@ -82,7 +84,7 @@ func gatherChoices(ctx context.Context) ([]choice, error) {
 	return choices, nil
 }
 
-func buildSimulations(ctx context.Context, checks []string) error {
+func buildSimulations(ctx context.Context, checks []choice) error {
 	failed := 0
 
 	if err := os.MkdirAll("out", 0o700); err != nil {
@@ -96,7 +98,7 @@ func buildSimulations(ctx context.Context, checks []string) error {
 	for i, c := range checks {
 		ctx, cancel := context.WithTimeout(context.Background(), buildTimeout)
 		defer cancel()
-		cmd := exec.CommandContext(ctx, "go", "build", "../cmd/"+c)
+		cmd := exec.CommandContext(ctx, "go", "build", "../cmd/"+c.name)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
 			klog.Errorf("#%d: build failed: %v\n%s", i, err, out)
@@ -108,7 +110,7 @@ func buildSimulations(ctx context.Context, checks []string) error {
 	return nil
 }
 
-func runSimulations(ctx context.Context, checks []string) error {
+func runSimulations(ctx context.Context, checks []choice) error {
 	failed := 0
 	su, err := exec.LookPath("doas")
 	if err != nil {
@@ -119,25 +121,24 @@ func runSimulations(ctx context.Context, checks []string) error {
 	}
 
 	for i, c := range checks {
-		if _, err := os.Stat(c); err != nil {
+		if _, err := os.Stat(c.name); err != nil {
 			klog.Errorf("%c not found - skipping")
 			failed++
 			continue
 		}
 
-		title := fmt.Sprintf("Launching %s at %s", c, time.Now().Format(time.RFC3339Nano))
-		if strings.HasSuffix(c, "-root") {
-			title = title + " (will prompt for root password)"
-		}
+		title := fmt.Sprintf("[%d of %d] %s at %s", i+1, len(checks), c, time.Now().Format(timeFormat))
+
 		announce(title)
+		subtitle(c.desc)
 
 		ctx, cancel := context.WithTimeout(context.Background(), execTimeout)
 		defer cancel()
 
-		cmd := exec.CommandContext(ctx, "./"+c)
-		if strings.HasSuffix(c, "-root") {
-			klog.Infof("root required for %s - will prompt", c)
-			cmd = exec.CommandContext(ctx, su, "./"+c)
+		cmd := exec.CommandContext(ctx, "./"+c.name)
+		if strings.HasSuffix(c.name, "-root") {
+			notice(fmt.Sprintf("This simulation requires root privileges - will use %s", su))
+			cmd = exec.CommandContext(ctx, su, "./"+c.name)
 		}
 
 		cmd.Stdin = os.Stdin
