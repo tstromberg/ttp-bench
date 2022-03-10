@@ -1,3 +1,6 @@
+//go:build !windows
+
+// Launches netcat to listen on a port [T1059.004]
 package main
 
 import (

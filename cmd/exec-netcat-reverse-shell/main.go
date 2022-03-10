@@ -1,3 +1,6 @@
+//go:build !windows
+
+// Launches a temporary reverse shell using netcat
 package main
 
 import (

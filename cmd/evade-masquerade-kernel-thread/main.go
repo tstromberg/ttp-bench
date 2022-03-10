@@ -1,3 +1,4 @@
+// Simulates process masquerading as a kernel thread [T1036.004]
 package main
 
 import (
@@ -11,9 +12,13 @@ import (
 )
 
 func main() {
-	target := "[kthreadd]"
-	if runtime.GOOS == "darwin" {
-		target = "kernel_task"
+	target := "kernel_task"
+
+	switch runtime.GOOS {
+	case "linux":
+		target = "[kthreadd]"
+	case "windows":
+		target = "rundll32.exe"
 	}
 
 	klog.Infof("%s -> %s", runtime.GOOS, target)

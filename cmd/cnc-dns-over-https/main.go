@@ -1,3 +1,4 @@
+// Simulates C&C discovery via DNS over HTTPS (ala Godlua)
 package main
 
 import (

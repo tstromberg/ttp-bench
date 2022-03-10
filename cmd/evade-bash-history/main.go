@@ -1,3 +1,6 @@
+//go:build !windows
+
+// Simulates attack cleanup via bash_history truncation [T1070.003]
 package main
 
 import (

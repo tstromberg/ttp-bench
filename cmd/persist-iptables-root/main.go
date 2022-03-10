@@ -1,3 +1,6 @@
+//go:build linux
+
+// Simulates attacker making iptables changes to allow incoming traffic
 package main
 
 import (

@@ -1,3 +1,4 @@
+// Simulates theft of web session cookies [T1539]
 package main
 
 import (

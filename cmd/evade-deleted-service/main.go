@@ -1,3 +1,6 @@
+//go:build !windows
+
+// Simulates a service running by a binary which no longer exists
 package main
 
 import (

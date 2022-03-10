@@ -1,3 +1,4 @@
+// Simulates theft of credentials via network sniffing [T1040]
 package main
 
 import (

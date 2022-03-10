@@ -1,3 +1,4 @@
+// Simulates C&C discovery via randomized hostname lookups (ala Aquatic Panda)
 package main
 
 import (

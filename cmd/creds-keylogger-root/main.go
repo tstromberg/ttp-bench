@@ -1,3 +1,6 @@
+//go:build linux
+
+// Simulate theft of credentials via key logging [T1056]
 package main
 
 import (

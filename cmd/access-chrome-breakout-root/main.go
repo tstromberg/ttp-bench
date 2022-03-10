@@ -1,4 +1,4 @@
-// simulate chrome spawning a shell (not elegantly)
+// Simulates an overflow where Google Chrome spawns a shell [T1189]
 package main
 
 import (

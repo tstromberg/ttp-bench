@@ -1,3 +1,6 @@
+//go:build !windows
+
+// Simulates tool transfer using curl & running from /var/tmp/. [T1036.005]
 package main
 
 import (
@@ -8,6 +11,7 @@ import (
 )
 
 func main() {
+	// TODO: Port to Windows (which does not have curl built-in)
 	dir := "/var/tmp/.hidden"
 	log.Printf("creating %s ...", dir)
 	if err := os.MkdirAll(dir, 0o700); err != nil {

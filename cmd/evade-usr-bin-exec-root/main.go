@@ -1,3 +1,6 @@
+//go:build linux
+
+// Simulates malicious program installing itself into /usr/bin [T1036.005]
 package main
 
 import (

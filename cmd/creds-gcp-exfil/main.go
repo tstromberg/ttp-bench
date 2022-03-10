@@ -1,3 +1,4 @@
+// Simulates theft of GCP credentials [1552.001, T15060.002]
 package main
 
 import (
