@@ -18,7 +18,7 @@ func DNSOverHTTPS() error {
 
 	c := doh.Use(doh.CloudflareProvider, doh.GoogleProvider)
 
-	for i := 0; i < 8; i++ {
+	for i := 0; i < 16; i++ {
 		bytes := make([]byte, 8)
 		if _, err := rand.Read(bytes); err != nil {
 			return fmt.Errorf("read: %w", err)
@@ -31,6 +31,7 @@ func DNSOverHTTPS() error {
 		if err != nil {
 			return fmt.Errorf("query: %w", err)
 		}
+		time.Sleep(500 * time.Millisecond)
 	}
 
 	c.Close()

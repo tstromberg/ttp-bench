@@ -13,7 +13,7 @@ import (
 )
 
 var (
-	execTimeout  = 65 * time.Second
+	execTimeout  = 70 * time.Second
 	buildTimeout = 45 * time.Second
 )
 
@@ -23,20 +23,28 @@ func main() {
 
 	ctx := context.Background()
 
-	announce("gathering choices ...")
+	p := createSpinner("Inspecting available simulations ...")
 	choices, err := gatherChoices(ctx)
 	if err != nil {
 		klog.Fatalf("gather choices: %v", err)
 	}
+	p.Quit()
 
 	selected, err := showChoices(ctx, choices)
 	if err != nil {
 		klog.Fatalf("show choices: %v", err)
 	}
 
+	p = createSpinner(fmt.Sprintf("Building %d simulations ...", len(selected)))
 	if err = buildSimulations(ctx, selected); err != nil {
 		klog.Exitf("run failed: %v", err)
 	}
+	p.Quit()
+
+	p = createSpinner(fmt.Sprintf("Executing %d simulations ...", len(selected)))
+	// Quit because we announce the simulations differently
+	time.Sleep(5 * time.Millisecond)
+	p.Quit()
 
 	if err = runSimulations(ctx, selected); err != nil {
 		klog.Exitf("run failed: %v", err)
@@ -49,7 +57,6 @@ type choice struct {
 }
 
 func gatherChoices(ctx context.Context) ([]choice, error) {
-	klog.Infof("scanning for relevant simulations ...")
 	dirs, err := os.ReadDir("cmd")
 	if err != nil {
 		klog.Exitf("readdir failed: %v", err)
@@ -63,7 +70,7 @@ func gatherChoices(ctx context.Context) ([]choice, error) {
 		out, err := cmd.CombinedOutput()
 		if exitErr, ok := err.(*exec.ExitError); ok {
 			if exitErr.ExitCode() == 1 {
-				klog.Infof("%s: %s", c, out)
+				klog.V(2).Infof("%s: %s", c, out)
 				continue
 			}
 			return choices, fmt.Errorf("%s failed: %v\n%s", cmd, err, out)
@@ -89,8 +96,6 @@ func buildSimulations(ctx context.Context, checks []string) error {
 	for i, c := range checks {
 		ctx, cancel := context.WithTimeout(context.Background(), buildTimeout)
 		defer cancel()
-
-		klog.Infof("#%d: testing %s ...", i, c)
 		cmd := exec.CommandContext(ctx, "go", "build", "../cmd/"+c)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
@@ -98,7 +103,6 @@ func buildSimulations(ctx context.Context, checks []string) error {
 			failed++
 			continue
 		}
-		klog.Infof("#%d: %s build complete", i, c)
 	}
 
 	return nil
@@ -121,9 +125,9 @@ func runSimulations(ctx context.Context, checks []string) error {
 			continue
 		}
 
-		title := c
+		title := fmt.Sprintf("Launching %s at %s", c, time.Now().Format(time.RFC3339Nano))
 		if strings.HasSuffix(c, "-root") {
-			title = c + " (will prompt for root password)"
+			title = title + " (will prompt for root password)"
 		}
 		announce(title)
 
@@ -144,6 +148,9 @@ func runSimulations(ctx context.Context, checks []string) error {
 			failed++
 			continue
 		}
+
+		// Make it easier to disambiguate in the logs
+		time.Sleep(1 * time.Second)
 	}
 
 	if failed > 0 {

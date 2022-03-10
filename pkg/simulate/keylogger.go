@@ -3,6 +3,7 @@ package simulate
 import (
 	"fmt"
 	"sync"
+	"time"
 
 	"github.com/MarinX/keylogger"
 	"k8s.io/klog/v2"
@@ -15,13 +16,17 @@ func listenKeyboard(kbd string) error {
 		return fmt.Errorf("keyboard: %w", err)
 	}
 	defer k.Close()
+	start := time.Now()
 
 	events := k.Read()
 	for e := range events {
 		klog.Infof("event: %+v", e)
+		if time.Since(start) > 10*time.Second {
+			klog.Infof("spied long enough, returning ...")
+			break
+		}
 	}
 
-	klog.Infof("done listening!")
 	return nil
 }
 

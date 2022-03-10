@@ -8,6 +8,7 @@ import (
 
 	"github.com/charmbracelet/bubbles/key"
 	"github.com/charmbracelet/bubbles/list"
+	"github.com/charmbracelet/bubbles/spinner"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
@@ -132,4 +133,70 @@ func announce(title string) {
 		PaddingRight(4)
 
 	fmt.Println(style.Render(title))
+}
+
+type errMsg error
+
+type spinModel struct {
+	text    string
+	spinner spinner.Model
+	stop    bool
+	err     error
+}
+
+func createSpinModel() spinModel {
+	s := spinner.New()
+	s.Spinner = spinner.Dot
+	s.Style = lipgloss.NewStyle().Foreground(lipgloss.Color("205"))
+	return spinModel{spinner: s}
+}
+
+func (m spinModel) Init() tea.Cmd {
+	return m.spinner.Tick
+}
+
+func (m spinModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	quitMsg := tea.Quit()
+
+	switch msg := msg.(type) {
+	case errMsg:
+		m.err = msg
+		return m, nil
+	default:
+		if msg == quitMsg {
+			m.stop = true
+			return m, tea.Quit
+		}
+
+		var cmd tea.Cmd
+		m.spinner, cmd = m.spinner.Update(msg)
+		return m, cmd
+	}
+
+}
+
+func (m spinModel) View() string {
+	if m.err != nil {
+		return m.err.Error()
+	}
+	str := fmt.Sprintf("\n\n   %s %s\n\n", m.spinner.View(), m.text)
+	if m.stop {
+		return str + "\n"
+	}
+	return str
+}
+
+func createSpinner(text string) *tea.Program {
+	m := createSpinModel()
+	m.text = text
+	p := tea.NewProgram(m)
+
+	go func() {
+		if err := p.Start(); err != nil {
+			fmt.Println(err)
+			os.Exit(1)
+		}
+	}()
+
+	return p
 }
