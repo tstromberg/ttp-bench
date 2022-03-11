@@ -1,6 +1,6 @@
 //go:build !windows
 
-// Simulates tool transfer using curl to a URL with a hidden directory [T1036.005]
+// Simulates tool transfer using curl to a hidden directory [T1036.005]
 package main
 
 import (

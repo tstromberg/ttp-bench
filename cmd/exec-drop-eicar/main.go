@@ -1,4 +1,4 @@
-// Simulates droppping a known virus/trojan (EICAR test file) onto the filesystem
+// Simulates droppping a known virus signature (EICAR) onto filesystem
 package main
 
 import (
