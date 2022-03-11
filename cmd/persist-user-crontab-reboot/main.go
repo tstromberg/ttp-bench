@@ -33,13 +33,13 @@ func main() {
 		log.Fatalf("copy: %v", err)
 	}
 
-	install := fmt.Sprintf(`(crontab -l | egrep -v "%s"); echo @reboot "%s") | crontab)`, dest, dest)
+	install := fmt.Sprintf(`( crontab -l | egrep -v "%s"; echo @reboot "%s" ) | crontab`, dest, dest)
 	if err := iexec.WithTimeout(10*time.Second, "sh", "-c", install); err != nil {
 		log.Fatalf("crontab install failed: %v", err)
 	}
 
 	defer func() {
-		remove := fmt.Sprintf(`(crontab -l | egrep -v "%s") | crontab)`, dest)
+		remove := fmt.Sprintf(`crontab -l | egrep -v "%s" | crontab`, dest)
 		if err := iexec.WithTimeout(10*time.Second, "sh", "-c", remove); err != nil {
 			log.Fatalf("crontab remove failed: %v", err)
 		}

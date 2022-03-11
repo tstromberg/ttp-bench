@@ -3,6 +3,7 @@ package iexec
 import (
 	"context"
 	"errors"
+	"fmt"
 	"log"
 	"os"
 	"os/exec"
@@ -21,7 +22,7 @@ func WithTimeout(timeout time.Duration, program string, args ...string) error {
 			log.Printf("hit my %s time limit, have a wonderful day! ...", timeout)
 			return nil
 		}
-		return err
+		return fmt.Errorf("cmd: %v\n%s", err, bs)
 	}
 
 	log.Printf("output: %s", bs)
