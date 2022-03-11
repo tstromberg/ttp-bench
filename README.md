@@ -2,7 +2,7 @@
 
 ![logo](./images/logo.png)
 
-ioc-bench simulates a number of popular indicators of compromise (IoC) from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and recently published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process.
+ioc-bench simulates ~24 popular indicators of compromise (IoC) from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and recently published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process.
 
 How many of these simulations does your intrusion detection configuration detect?
 

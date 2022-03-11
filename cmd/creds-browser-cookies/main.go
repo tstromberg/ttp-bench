@@ -4,12 +4,16 @@ package main
 import (
 	"log"
 
-	"github.com/tstromberg/ioc-bench/pkg/simulate"
+	"github.com/zellyn/kooky"
+	_ "github.com/zellyn/kooky/allbrowsers"
 )
 
 func main() {
-	if err := simulate.CookieTheft(); err != nil {
-		log.Fatalf("unexpected error: %v", err)
+	for _, st := range kooky.FindAllCookieStores() {
+		log.Printf("found cookie store: %s -> %s", st.Browser(), st.FilePath())
+	}
 
+	for _, c := range kooky.ReadCookies(kooky.DomainHasSuffix(`google.com`), kooky.Name(`NID`)) {
+		log.Printf("found google.com NID cookie expiring at %s", c.Expires)
 	}
 }
