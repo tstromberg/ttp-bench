@@ -63,9 +63,13 @@ func PacketSniffer() error {
 
 	source := gopacket.NewPacketSource(handler, handler.LinkType())
 	log.Printf("iterating over packets ...")
+	packets := 0
 	for p := range source.Packets() {
 		log.Printf("got packet: %+v", p)
-		return nil
+		packets++
+		if packets >= 2 {
+			break
+		}
 	}
 	return nil
 }
