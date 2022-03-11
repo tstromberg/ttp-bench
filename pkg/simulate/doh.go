@@ -5,11 +5,11 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"time"
 
 	"github.com/likexian/doh-go"
 	"github.com/likexian/doh-go/dns"
-	"k8s.io/klog/v2"
 )
 
 func DNSOverHTTPS() error {
@@ -25,7 +25,7 @@ func DNSOverHTTPS() error {
 		}
 
 		host := fmt.Sprintf("%s.blogspot.com", hex.EncodeToString(bytes))
-		klog.Infof("looking up TXT record for %s ...", host)
+		log.Printf("looking up TXT record for %s ...", host)
 
 		_, err := c.Query(ctx, dns.Domain(host), dns.TypeTXT)
 		if err != nil {

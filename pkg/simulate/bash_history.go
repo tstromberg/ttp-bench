@@ -2,6 +2,7 @@ package simulate
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"time"
@@ -17,20 +18,20 @@ func TruncateBashHistory() error {
 	}
 
 	path := filepath.Join(home, ".bash_history")
-	klog.Infof("backing up %s ...", path)
+	log.Printf("backing up %s ...", path)
 	if err := cp.Copy(path, path+".bak"); err != nil {
 		return fmt.Errorf("copy: %w", err)
 	}
 
 	defer func() {
-		klog.Infof("restoring %s ...", path)
+		log.Printf("restoring %s ...", path)
 		if err := cp.Copy(path+".bak", path); err != nil {
 			klog.Errorf("unable to restore %s: %v", path, err)
 		}
 	}()
 
 	time.Sleep(1 * time.Second)
-	klog.Infof("Truncating %s ...", path)
+	log.Printf("Truncating %s ...", path)
 
 	if err := os.Truncate(path, 0); err != nil {
 		return fmt.Errorf("truncate: %w", err)
@@ -41,7 +42,7 @@ func TruncateBashHistory() error {
 		return fmt.Errorf("stat: %w", err)
 	}
 
-	klog.Infof("stat: %+v", s)
+	log.Printf("stat: %+v", s)
 	time.Sleep(1 * time.Second)
 	return nil
 }

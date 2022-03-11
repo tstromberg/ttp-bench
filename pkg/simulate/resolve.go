@@ -4,9 +4,8 @@ import (
 	"crypto/rand"
 	"encoding/hex"
 	"fmt"
+	"log"
 	"net"
-
-	"k8s.io/klog/v2"
 )
 
 func ResolveRandom() error {
@@ -17,7 +16,7 @@ func ResolveRandom() error {
 		}
 
 		host := fmt.Sprintf("%s.dns.%d.eu.org", hex.EncodeToString(bytes), i)
-		klog.Infof("looking up %s ...", host)
+		log.Printf("looking up %s ...", host)
 		_, err := net.LookupHost(host)
 
 		if err != nil {

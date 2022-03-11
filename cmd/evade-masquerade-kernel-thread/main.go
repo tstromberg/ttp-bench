@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/erikdubbelboer/gspt"
-	"k8s.io/klog/v2"
 )
 
 func main() {
@@ -21,7 +20,7 @@ func main() {
 		target = "rundll32.exe"
 	}
 
-	klog.Infof("%s -> %s", runtime.GOOS, target)
+	log.Printf("%s -> %s", runtime.GOOS, target)
 
 	gspt.SetProcTitle(target)
 	log.Printf("pid %d is hiding as %q and sleeping ...", os.Getpid(), target)

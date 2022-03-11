@@ -8,8 +8,6 @@ import (
 	"os/exec"
 	"path/filepath"
 	"time"
-
-	"k8s.io/klog/v2"
 )
 
 func GCloudCredentialsTheft() error {
@@ -30,14 +28,17 @@ func GCloudCredentialsTheft() error {
 	}
 	defer os.Remove(tf.Name())
 
-	klog.Infof("archiving %s to %s ...", path, tf.Name())
+	log.Printf("archiving %s to %s ...", path, tf.Name())
 	cmd := exec.Command("tar", "-cvf", tf.Name(), path)
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = os.Stderr
+
 	if err := cmd.Run(); err != nil {
 		return fmt.Errorf("tar failed: %w", err)
 	}
 
 	time.Sleep(1 * time.Second)
 
-	klog.Infof("cleaning up ...")
+	log.Printf("cleaning up ...")
 	return nil
 }

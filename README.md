@@ -20,14 +20,14 @@ How many of these simulations does your intrusion detection configuration detect
 
 To jump in, run the following to access the interactive menu of checks to execute:
 
-```
+```shell
 go build .
 ./ioc-bench
 ````
 
 ioc-bench supports some flags for automation:
 
-```
+```shell
  -all: execute all possible checks
   -checks: comma-separated list of checks to execute
   -list: list possible checks
@@ -37,7 +37,7 @@ For the few checks that require root, you will be prompted for a password.
 
 ## Available checks
 
-NOTE: Not all checks are available on all platforms. 
+NOTE: Not all checks are available on all platforms.
 
 * access-chrome-breakout-root: Simulates an overflow where Google Chrome spawns a shell [T1189]
 * cnc-dns-over-https: Simulates C&C discovery via DNS over HTTPS (ala Godlua)

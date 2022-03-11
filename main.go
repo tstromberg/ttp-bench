@@ -4,6 +4,7 @@ import (
 	"context"
 	"flag"
 	"fmt"
+	"log"
 	"os"
 	"os/exec"
 	"runtime"
@@ -24,7 +25,6 @@ var (
 )
 
 func main() {
-	klog.InitFlags(nil)
 	flag.Parse()
 
 	ctx := context.Background()
@@ -32,7 +32,7 @@ func main() {
 
 	choices, err := gatherChoices(ctx)
 	if err != nil {
-		klog.Fatalf("gather choices: %v", err)
+		log.Fatalf("gather choices: %v", err)
 	}
 
 	if *listChecksFlag {
@@ -78,12 +78,14 @@ func main() {
 
 	status(fmt.Sprintf("Building %d selected simulations", len(selected)))
 	if err = buildSimulations(ctx, selected); err != nil {
-		klog.Exitf("run failed: %v", err)
+		log.Printf("build failed: %v", err)
+		os.Exit(1)
 	}
 
 	status(fmt.Sprintf("Executing %d selected simulations", len(selected)))
 	if err = runSimulations(ctx, selected); err != nil {
-		klog.Exitf("run failed: %v", err)
+		log.Printf("run failed: %v", err)
+		os.Exit(2)
 	}
 }
 
@@ -95,7 +97,7 @@ type choice struct {
 func gatherChoices(ctx context.Context) ([]choice, error) {
 	dirs, err := os.ReadDir("cmd")
 	if err != nil {
-		klog.Exitf("readdir failed: %v", err)
+		return nil, fmt.Errorf("readdir: %w", err)
 	}
 
 	choices := []choice{}
