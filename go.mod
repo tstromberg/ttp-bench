@@ -6,6 +6,7 @@ require (
 	github.com/MarinX/keylogger v0.0.0-20210528193429-a54d7834cc1a // indirect
 	github.com/atotto/clipboard v0.1.4 // indirect
 	github.com/bobesa/go-domain-util v0.0.0-20190911083921-4033b5f7dd89 // indirect
+	github.com/cavaliergopher/grab/v3 v3.0.1 // indirect
 	github.com/charmbracelet/bubbles v0.10.3 // indirect
 	github.com/charmbracelet/bubbletea v0.20.0 // indirect
 	github.com/charmbracelet/lipgloss v0.5.0 // indirect
