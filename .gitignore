@@ -16,3 +16,7 @@
 
 # added by lint-install
 out/
+
+# custom
+ioc-bench
+.DS_Store
