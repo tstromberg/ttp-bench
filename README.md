@@ -2,7 +2,7 @@
 
 ![logo](./images/logo.png)
 
-ioc-bench simulates a number of popular indicators of compromise from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and recently published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process.
+ioc-bench simulates a number of popular indicators of compromise (IoC) from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and recently published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process.
 
 How many of these simulations does your intrusion detection configuration detect?
 
@@ -13,8 +13,9 @@ How many of these simulations does your intrusion detection configuration detect
 
 ## Requirements
 
-* A UNIX-like operating system (unintentionally, but most of the checks today are oriented to UNIX systems)
 * The Go Programming language
+
+Most of the checks available today mimic IoC found on UNIX-like operating systems. This is however not an intentional design goal. ioc-bench is actively tested on Linux, macOS, and FreeBSD.
 
 ## Usage
 
@@ -23,7 +24,7 @@ To jump in, run the following to access the interactive menu of checks to execut
 ```shell
 go build .
 ./ioc-bench
-````
+```
 
 ioc-bench supports some flags for automation:
 
@@ -46,6 +47,7 @@ NOTE: Not all checks are available on all platforms.
 * creds-gcp-exfil: Simulates theft of GCP credentials [1552.001, T15060.002]
 * creds-keylogger-root: Simulate theft of credentials via key logging [T1056]
 * creds-packet-sniffer-root: Simulates theft of credentials via network sniffing [T1040]
+* creds-ssh-exfil: Simulates theft of GCP credentials [1552.001, T15060.002]
 * evade-bash-history: Simulates attack cleanup via bash_history truncation [T1070.003]
 * evade-deleted-service: Simulates a service running by a binary which no longer exists
 * evade-masquerade-kernel-thread: Simulates process masquerading as a kernel thread [T1036.004]
@@ -59,5 +61,6 @@ NOTE: Not all checks are available on all platforms.
 * exec-python-reverse-shell: Launches a temporary reverse shell using bash
 * exec-traitor-vuln-probe: Simulates probing system for privilege escalation vulns
 * persist-iptables-root: Simulates attacker making iptables changes to allow incoming traffic
+* persist-user-crontab-reboot: Simulates a command inserting itself into the user crontab for persistence
 * privesc-traitor-dirty-pipe: Simulate CVE-2022-0847 (Dirty pipe) to escalate user privileges to root
 * privesc-traitor-docker-socket: Simulates using Docker sockets to escalate user privileges to root
