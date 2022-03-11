@@ -2,6 +2,7 @@ package main
 
 import (
 	"context"
+	"errors"
 	"flag"
 	"fmt"
 	"log"
@@ -178,7 +179,11 @@ func runSimulations(ctx context.Context, checks []choice) error {
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
 		if err := cmd.Run(); err != nil {
-			log.Printf("%s failed: %v", c.name, err)
+			if errors.Is(ctx.Err(), context.DeadlineExceeded) {
+				log.Printf("%s timed out: %v", c.name, err)
+			} else {
+				log.Printf("%s failed: %v", c.name, err)
+			}
 			failed++
 			continue
 		}
