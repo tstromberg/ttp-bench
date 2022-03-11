@@ -5,6 +5,7 @@ package main
 
 import (
 	"log"
+	"net/http"
 	"os"
 	"time"
 )
@@ -16,6 +17,14 @@ func main() {
 		log.Fatalf("unexpected error: %v", err)
 	}
 
-	log.Printf("waiting around for a minute ...")
-	time.Sleep(1 * time.Minute)
+	url := "https://suspicious-ioc.blogspot.com/"
+	log.Printf("making connection to %s", url)
+	_, err := http.Get(url)
+	if err != nil {
+		log.Printf("%s returned error: %v (don't care)", url, err)
+	}
+
+	timeout := 45 * time.Second
+	log.Printf("waiting around for %s ...", timeout)
+	time.Sleep(timeout)
 }

@@ -6,10 +6,10 @@ import (
 	"fmt"
 	"os"
 	"os/exec"
+	"runtime"
 	"strings"
 	"time"
 
-	"github.com/charmbracelet/lipgloss"
 	"k8s.io/klog/v2"
 )
 
@@ -24,16 +24,7 @@ func main() {
 	flag.Parse()
 
 	ctx := context.Background()
-
-	var style = lipgloss.NewStyle().
-		Bold(true).
-		Foreground(lipgloss.Color("#7D56F4")).
-		MarginTop(1).
-		PaddingLeft(4).
-		PaddingRight(4).
-		Width(termWidth())
-
-	fmt.Println(style.Render("Processing simulation data ..."))
+	status(fmt.Sprintf("Gathering simulations for %s/%s", runtime.GOOS, runtime.GOARCH))
 
 	choices, err := gatherChoices(ctx)
 	if err != nil {
@@ -45,10 +36,17 @@ func main() {
 		klog.Fatalf("show choices: %v", err)
 	}
 
+	if len(selected) == 0 {
+		msg("また会おうね")
+		os.Exit(0)
+	}
+
+	status(fmt.Sprintf("Building %d selected simulations", len(selected)))
 	if err = buildSimulations(ctx, selected); err != nil {
 		klog.Exitf("run failed: %v", err)
 	}
 
+	status(fmt.Sprintf("Executing %d selected simulations", len(selected)))
 	if err = runSimulations(ctx, selected); err != nil {
 		klog.Exitf("run failed: %v", err)
 	}

@@ -15,6 +15,8 @@ import (
 
 var (
 	docStyle = lipgloss.NewStyle().Margin(1, 2)
+
+	// selected is the global that stores toggle state
 	selected = map[string]bool{}
 )
 
@@ -38,18 +40,17 @@ func newListKeyMap() *listKeyMap {
 	return &listKeyMap{
 		togglechoice: key.NewBinding(
 			key.WithKeys(""),
-			key.WithHelp("<space>", "toggle choice"),
+			key.WithHelp("<space>", "toggle"),
 		),
 		finishchoices: key.NewBinding(
 			key.WithKeys("enter"),
-			key.WithHelp("<enter>", "execute simulations"),
+			key.WithHelp("<enter>", "execute selected"),
 		),
 	}
 }
 
 type model struct {
 	list list.Model
-	keys *listKeyMap
 }
 
 func (m model) Init() tea.Cmd {
@@ -59,9 +60,11 @@ func (m model) Init() tea.Cmd {
 func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
-		if msg.String() == "ctrl+c" {
+		if msg.String() == "ctrl+c" || msg.String() == "q" {
+			selected = map[string]bool{}
 			return m, tea.Quit
 		}
+
 		if msg.String() == " " {
 			i, ok := m.list.SelectedItem().(choice)
 			if ok {
@@ -102,11 +105,15 @@ func selectChoices(_ context.Context, choices []choice) ([]choice, error) {
 		selected[c.name] = true
 	}
 
-	m := model{
-		list: list.New(items, list.NewDefaultDelegate(), 0, 0),
+	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
+	l.Title = "ioc-bench"
+
+	listKeys := newListKeyMap()
+	l.AdditionalShortHelpKeys = func() []key.Binding {
+		return []key.Binding{listKeys.finishchoices, listKeys.togglechoice}
 	}
 
-	m.list.Title = "ioc-bench"
+	m := model{list: l}
 
 	p := tea.NewProgram(m, tea.WithAltScreen())
 	if err := p.Start(); err != nil {
@@ -134,6 +141,18 @@ func termWidth() int {
 		return 78
 	}
 	return width
+}
+
+func status(title string) {
+	style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#7D56F4"))
+	fmt.Print(style.Render(title))
+	style = lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#3D16A4"))
+	fmt.Println(style.Render(" ..."))
+}
+
+func msg(title string) {
+	style := lipgloss.NewStyle().Bold(true).Foreground(lipgloss.Color("#CDF456"))
+	fmt.Println(style.Render(title))
 }
 
 func announce(title string) {

@@ -6,8 +6,6 @@ import (
 	"log"
 	"os"
 	"time"
-
-	"k8s.io/klog/v2"
 )
 
 func main() {
@@ -21,8 +19,11 @@ func main() {
 	}
 
 	tf.WriteString(e1 + e2)
-	defer os.Remove(tf.Name())
+	defer func() {
+		log.Printf("removing %s (did anyone notice?) ...", tf.Name())
+		os.Remove(tf.Name())
+	}()
 
-	klog.Infof("Dropped %s ... ", tf.Name())
+	log.Printf("Dropped %s with known anti-virus signature (EICAR)", tf.Name())
 	time.Sleep(30 * time.Second)
 }
