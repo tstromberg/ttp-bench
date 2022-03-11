@@ -102,7 +102,12 @@ func selectChoices(_ context.Context, choices []choice) ([]choice, error) {
 	for _, c := range choices {
 		byName[c.name] = c
 		items = append(items, c)
-		selected[c.name] = true
+
+		// disable dirty-pipe privesc by default until we can assess
+		// whether it's restore mechanism is robust enough
+		if c.name != "privesc-traitor-dirty-pipe" {
+			selected[c.name] = true
+		}
 	}
 
 	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
