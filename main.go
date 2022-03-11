@@ -10,8 +10,6 @@ import (
 	"runtime"
 	"strings"
 	"time"
-
-	"k8s.io/klog/v2"
 )
 
 var (
@@ -67,7 +65,7 @@ func main() {
 	if len(selected) == 0 {
 		selected, err = selectChoices(ctx, choices)
 		if err != nil {
-			klog.Fatalf("show choices: %v", err)
+			log.Fatalf("show choices: %v", err)
 		}
 	}
 
@@ -108,7 +106,6 @@ func gatherChoices(ctx context.Context) ([]choice, error) {
 		out, err := cmd.CombinedOutput()
 		if exitErr, ok := err.(*exec.ExitError); ok {
 			if exitErr.ExitCode() == 1 {
-				klog.V(2).Infof("%s: %s", c, out)
 				continue
 			}
 			return choices, fmt.Errorf("%s failed: %v\n%s", cmd, err, out)
@@ -137,7 +134,7 @@ func buildSimulations(ctx context.Context, checks []choice) error {
 		cmd := exec.CommandContext(ctx, "go", "build", "../cmd/"+c.name)
 		out, err := cmd.CombinedOutput()
 		if err != nil {
-			klog.Errorf("#%d: build failed: %v\n%s", i, err, out)
+			log.Printf("#%d: build failed: %v\n%s", i, err, out)
 			failed++
 			continue
 		}
@@ -158,7 +155,7 @@ func runSimulations(ctx context.Context, checks []choice) error {
 
 	for i, c := range checks {
 		if _, err := os.Stat(c.name); err != nil {
-			klog.Errorf("%c not found - skipping", c.name)
+			log.Printf("%s not found (build failure?) - skipping", c.name)
 			failed++
 			continue
 		}
@@ -181,7 +178,7 @@ func runSimulations(ctx context.Context, checks []choice) error {
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
 		if err := cmd.Run(); err != nil {
-			klog.Errorf("#%d: check failed: %v", i, err)
+			log.Printf("%s failed: %v", c.name, err)
 			failed++
 			continue
 		}

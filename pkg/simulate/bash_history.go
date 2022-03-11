@@ -8,7 +8,6 @@ import (
 	"time"
 
 	cp "github.com/otiai10/copy"
-	"k8s.io/klog/v2"
 )
 
 func TruncateBashHistory() error {
@@ -26,7 +25,7 @@ func TruncateBashHistory() error {
 	defer func() {
 		log.Printf("restoring %s ...", path)
 		if err := cp.Copy(path+".bak", path); err != nil {
-			klog.Errorf("unable to restore %s: %v", path, err)
+			log.Printf("unable to restore %s: %v", path, err)
 		}
 	}()
 
