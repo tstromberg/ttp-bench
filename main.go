@@ -14,6 +14,10 @@ import (
 )
 
 var (
+	checksFlag     = flag.String("checks", "", "comma-separated list of checks to execute")
+	allChecksFlag  = flag.Bool("all", false, "execute all possible checks")
+	listChecksFlag = flag.Bool("list", false, "list possible checks")
+
 	execTimeout  = 70 * time.Second
 	buildTimeout = 45 * time.Second
 	timeFormat   = "2006-01-02 15:04:05.999"
@@ -24,16 +28,47 @@ func main() {
 	flag.Parse()
 
 	ctx := context.Background()
-	status(fmt.Sprintf("Gathering simulations for %s/%s", runtime.GOOS, runtime.GOARCH))
+	//	status(fmt.Sprintf("Gathering simulations for %s/%s", runtime.GOOS, runtime.GOARCH))
 
 	choices, err := gatherChoices(ctx)
 	if err != nil {
 		klog.Fatalf("gather choices: %v", err)
 	}
 
-	selected, err := selectChoices(ctx, choices)
-	if err != nil {
-		klog.Fatalf("show choices: %v", err)
+	if *listChecksFlag {
+		fmt.Printf("checks available for %s/%s:\n\n", runtime.GOOS, runtime.GOARCH)
+		for _, c := range choices {
+			fmt.Printf("* %s: %s\n", c.name, c.desc)
+		}
+		os.Exit(0)
+	}
+
+	selected := []choice{}
+	if *allChecksFlag {
+		selected = append(selected, choices...)
+	} else if *checksFlag != "" {
+		for _, s := range strings.Split(*checksFlag, ",") {
+			var found *choice
+			for _, c := range choices {
+				if c.name == s {
+					found = &c
+					break
+				}
+			}
+			if found != nil {
+				selected = append(selected, *found)
+			} else {
+				fmt.Printf("%s is not an available test on this platform: %v", s, choices)
+				os.Exit(2)
+			}
+		}
+	}
+
+	if len(selected) == 0 {
+		selected, err = selectChoices(ctx, choices)
+		if err != nil {
+			klog.Fatalf("show choices: %v", err)
+		}
 	}
 
 	if len(selected) == 0 {

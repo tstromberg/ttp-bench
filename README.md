@@ -2,7 +2,7 @@
 
 ![logo](./images/logo.png)
 
-ioc-bench simulates a number of popular indicators of compromise from the MITRE ATT&CK framework, biasing toward those seen in more recent attacks.
+ioc-bench simulates a number of popular indicators of compromise from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and recently published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process.
 
 How many of these simulations does your intrusion detection configuration detect?
 
@@ -18,16 +18,31 @@ Execution screen:
 
 ## Requirements
 
-* A UNIX-like operating system
+* A UNIX-like operating system (unintentionally, but most of the checks today are oriented to UNIX systems)
 * The Go Programming language
 
 ## Usage
 
-`go run .`
+To jump in, run the following to access the interactive menu of checks to execute:
+
+```
+go build .
+./ioc-bench
+````
+
+ioc-bench supports some flags for automation:
+
+```
+ -all: execute all possible checks
+  -checks: comma-separated list of checks to execute
+  -list: list possible checks
+```
 
 For the few checks that require root, you will be prompted for a password.
 
-## Implemented
+## Available checks
+
+NOTE: Not all checks are available on all platforms. 
 
 * access-chrome-breakout-root: Simulates an overflow where Google Chrome spawns a shell [T1189]
 * cnc-dns-over-https: Simulates C&C discovery via DNS over HTTPS (ala Godlua)
@@ -51,7 +66,3 @@ For the few checks that require root, you will be prompted for a password.
 * persist-iptables-root: Simulates attacker making iptables changes to allow incoming traffic
 * privesc-traitor-dirty-pipe: Simulate CVE-2022-0847 (Dirty pipe) to escalate user privileges to root
 * privesc-traitor-docker-socket: Simulates using Docker sockets to escalate user privileges to root
-
-```shell
-for d in cmd/*; do echo "* $(echo $d | cut -d/ -f2): $(go doc ./${d})"; done
-```
