@@ -8,8 +8,8 @@ How many of these simulations does your intrusion detection configuration detect
 
 ## Screenshots
 
-![choices](./images/choices.png)
-![running](./images/running.png)
+![choices](./images/ioc-choices.png)
+![running](./images/ioc-running.png)
 
 ## Requirements
 
