@@ -121,7 +121,7 @@ func runSimulations(ctx context.Context, checks []choice) error {
 
 	for i, c := range checks {
 		if _, err := os.Stat(c.name); err != nil {
-			klog.Errorf("%c not found - skipping")
+			klog.Errorf("%c not found - skipping", c.name)
 			failed++
 			continue
 		}

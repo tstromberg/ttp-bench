@@ -34,7 +34,7 @@ func main() {
 	}
 
 	ds, err := os.Stat(dest)
-	if err == nil && ds.Size() != ms.Size() {
+	if err == nil || ds.Size() != ms.Size() {
 		log.Fatalf("found unexpected file in %s", dest)
 	}
 
