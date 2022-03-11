@@ -8,12 +8,7 @@ How many of these simulations does your intrusion detection configuration detect
 
 ## Screenshots
 
-Interactive selection screen. Spacebar toggles, Enter commits.
-
 ![choices](./images/ioc-choices.png)
-
-Execution screen:
-
 ![running](./images/ioc-running.png)
 
 ## Requirements
