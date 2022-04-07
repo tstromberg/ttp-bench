@@ -26,7 +26,7 @@ func chooseNetworkDevice() (string, error) {
 	foundName := ""
 
 	for _, d := range devices {
-		if strings.HasPrefix(d.Name, "en") || strings.HasPrefix(d.Name, "wl") {
+		if strings.HasPrefix(d.Name, "en") || strings.HasPrefix(d.Name, "eth") || strings.HasPrefix(d.Name, "wl") {
 			if len(d.Addresses) > foundAddrs {
 				foundName = d.Name
 				foundAddrs = len(d.Addresses)
