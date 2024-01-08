@@ -9,7 +9,7 @@ import (
 )
 
 func ResolveRandom() error {
-	for i := 0; i < 16; i++ {
+	for i := 0; i < 64; i++ {
 		bytes := make([]byte, 8)
 		if _, err := rand.Read(bytes); err != nil {
 			return fmt.Errorf("read: %w", err)
