@@ -7,7 +7,7 @@ import (
 	"log"
 	"time"
 
-	"github.com/tstromberg/ioc-bench/pkg/iexec"
+	"github.com/tstromberg/ttp-bench/pkg/iexec"
 )
 
 func main() {

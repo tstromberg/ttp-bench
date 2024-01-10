@@ -8,7 +8,7 @@ import (
 	"time"
 
 	"github.com/cavaliergopher/grab/v3"
-	"github.com/tstromberg/ioc-bench/pkg/iexec"
+	"github.com/tstromberg/ttp-bench/pkg/iexec"
 )
 
 func Traitor(args ...string) error {

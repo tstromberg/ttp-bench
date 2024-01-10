@@ -11,7 +11,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/tstromberg/ioc-bench/pkg/simulate"
+	"github.com/tstromberg/ttp-bench/pkg/simulate"
 )
 
 var KernelRe = regexp.MustCompile(`[0-9]+\.[0-9]+(\.[0-9]+)*`)

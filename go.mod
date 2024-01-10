@@ -1,4 +1,4 @@
-module github.com/tstromberg/ioc-bench
+module github.com/tstromberg/ttp-bench
 
 go 1.17
 

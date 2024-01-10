@@ -6,7 +6,7 @@ import (
 	"os"
 	"path/filepath"
 
-	"github.com/tstromberg/ioc-bench/pkg/simulate"
+	"github.com/tstromberg/ttp-bench/pkg/simulate"
 )
 
 func main() {

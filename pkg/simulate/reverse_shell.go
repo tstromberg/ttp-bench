@@ -5,7 +5,7 @@ import (
 	"os/exec"
 	"time"
 
-	"github.com/tstromberg/ioc-bench/pkg/iexec"
+	"github.com/tstromberg/ttp-bench/pkg/iexec"
 )
 
 func BashReverseShell() error {

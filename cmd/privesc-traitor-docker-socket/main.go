@@ -7,7 +7,7 @@ import (
 	"log"
 	"os/exec"
 
-	"github.com/tstromberg/ioc-bench/pkg/simulate"
+	"github.com/tstromberg/ttp-bench/pkg/simulate"
 )
 
 func main() {

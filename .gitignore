@@ -18,5 +18,5 @@
 out/
 
 # custom
-ioc-bench
+ttp-bench
 .DS_Store

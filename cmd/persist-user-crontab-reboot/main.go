@@ -12,7 +12,7 @@ import (
 	"time"
 
 	cp "github.com/otiai10/copy"
-	"github.com/tstromberg/ioc-bench/pkg/iexec"
+	"github.com/tstromberg/ttp-bench/pkg/iexec"
 )
 
 func main() {

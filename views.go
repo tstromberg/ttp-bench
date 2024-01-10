@@ -111,7 +111,7 @@ func selectChoices(_ context.Context, choices []choice) ([]choice, error) {
 	}
 
 	l := list.New(items, list.NewDefaultDelegate(), 0, 0)
-	l.Title = "ioc-bench"
+	l.Title = "ttp-bench"
 
 	listKeys := newListKeyMap()
 	l.AdditionalShortHelpKeys = func() []key.Binding {

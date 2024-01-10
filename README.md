@@ -1,8 +1,8 @@
-# ioc-bench
+# ttp-bench
 
 ![logo](./images/logo.png)
 
-ioc-bench simulates ~24 popular indicators of compromise (IoC) from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and recently published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process.
+ttp-bench simulates 30 popular tactics from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process.
 
 How many of these simulations does your intrusion detection configuration detect?
 
@@ -15,7 +15,7 @@ How many of these simulations does your intrusion detection configuration detect
 
 * The Go Programming language
 
-Most of the checks available today mimic IoC found on UNIX-like operating systems. This is however not an intentional design goal. ioc-bench is actively tested on Linux, macOS, and FreeBSD.
+Most of the checks available today mimic IoC found on UNIX-like operating systems. This is however not an intentional design goal. ttp-bench is actively tested on Linux, macOS, and FreeBSD.
 
 ## Usage
 
@@ -23,10 +23,10 @@ To jump in, run the following to access the interactive menu of checks to execut
 
 ```shell
 go build .
-./ioc-bench
+./ttp-bench
 ```
 
-ioc-bench supports some flags for automation:
+ttp-bench supports some flags for automation:
 
 ```shell
  -all: execute all possible checks

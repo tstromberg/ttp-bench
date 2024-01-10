@@ -63,7 +63,7 @@ func ReplaceAndLaunch(src string, dest string, args string) error {
 
 	c := exec.Command("sh", "-c", dest, args)
 
-	// If we are root, swap to the user who ran ioc-bench
+	// If we are root, swap to the user who ran ttp-bench
 	if syscall.Geteuid() == 0 {
 		user := os.Getenv("DOAS_USER")
 		if user == "" {

