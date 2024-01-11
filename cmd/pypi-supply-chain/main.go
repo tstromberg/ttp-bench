@@ -23,7 +23,7 @@ func main() {
 		log.Fatalf("embedded 0 byte file")
 	}
 
-	c := exec.Command("python", "-m", "venv", venv)
+	c := exec.Command("python3", "-m", "venv", venv)
 	log.Printf("running %s ...", c)
 	out, err := c.CombinedOutput()
 	if err != nil {
