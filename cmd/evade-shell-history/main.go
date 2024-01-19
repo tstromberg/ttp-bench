@@ -10,7 +10,7 @@ import (
 )
 
 func main() {
-	if err := simulate.TruncateBashHistory(); err != nil {
+	if err := simulate.TruncateShellHistory(); err != nil {
 		log.Fatalf("unexpected error: %v", err)
 	}
 }

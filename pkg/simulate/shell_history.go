@@ -10,13 +10,18 @@ import (
 	cp "github.com/otiai10/copy"
 )
 
-func TruncateBashHistory() error {
+func TruncateShellHistory() error {
 	home, err := os.UserHomeDir()
 	if err != nil {
 		return fmt.Errorf("home dir: %w", err)
 	}
 
 	path := filepath.Join(home, ".bash_history")
+	_, err = os.Stat(path)
+	if err != nil {
+		path = filepath.Join(home, ".zsh_history")
+	}
+
 	log.Printf("backing up %s ...", path)
 	if err := cp.Copy(path, path+".bak"); err != nil {
 		return fmt.Errorf("copy: %w", err)
@@ -42,6 +47,6 @@ func TruncateBashHistory() error {
 	}
 
 	log.Printf("stat: %+v", s)
-	time.Sleep(1 * time.Second)
+	time.Sleep(15 * time.Second)
 	return nil
 }
