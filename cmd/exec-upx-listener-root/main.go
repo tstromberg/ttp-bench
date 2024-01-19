@@ -4,18 +4,24 @@ package main
 import (
 	"log"
 	"net"
+	"net/http"
 	"os"
 	"os/exec"
-	"path/filepath"
 
 	cp "github.com/otiai10/copy"
 )
 
-var listenPort = ":39999"
+var listenPort = ":19"
 
 func main() {
 	log.Printf("args: %s", os.Args)
 	if len(os.Args) > 1 {
+
+		// make outgoing connection
+		endpoint := "http://dprkportal.kp/239582395810"
+		log.Printf("fetching %s", endpoint)
+		http.Get(endpoint)
+
 		log.Printf("listening from %s at %s", os.Args[0], listenPort)
 		l, err := net.Listen("tcp", listenPort)
 		if err != nil {
@@ -26,17 +32,12 @@ func main() {
 		os.Exit(0)
 	}
 
-	cfg, err := os.UserConfigDir()
+	upx, err := exec.LookPath("upx")
 	if err != nil {
-		log.Fatalf("user config dir: %v", err)
+		log.Fatalf("upx not found: %v", err)
 	}
 
-	root := filepath.Join(cfg, "ttp-bench")
-	if err := os.Mkdir(root, 0o777); err != nil {
-		log.Fatalf("mkdir: %v", err)
-	}
-
-	tf, err := os.CreateTemp(root, ".XXXX")
+	tf, err := os.CreateTemp("/var/tmp", ".XXXX")
 	if err != nil {
 		log.Fatalf("create temp: %v", err)
 	}
@@ -50,15 +51,22 @@ func main() {
 		log.Fatalf("copy: %v", err)
 	}
 
-	if err := os.Chmod(dest, 0o755); err != nil {
+	if err := os.Chmod(dest, 0o777); err != nil {
 		log.Fatalf("chmod failed: %v", err)
 	}
 
 	tf.Close()
 
-	c := exec.Command(dest, "ttp-bench")
+	c := exec.Command(upx, "-f", dest)
 	log.Printf("running %s ...", c)
 	bs, err := c.CombinedOutput()
+	if err != nil {
+		log.Fatalf("run failed: %v\n%s", err, bs)
+	}
+
+	c = exec.Command(dest, "--omg", "--wtf", "--bbq")
+	log.Printf("running %s ...", c)
+	bs, err = c.CombinedOutput()
 	if err != nil {
 		log.Fatalf("run failed: %v\n%s", err, bs)
 	}
