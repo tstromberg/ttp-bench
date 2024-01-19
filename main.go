@@ -153,11 +153,11 @@ func runSimulations(ctx context.Context, checks []choice) error {
 		}
 	}
 
-	failed := []string{}
+	failed := map[string]string{}
 	for i, c := range checks {
 		if _, err := os.Stat(c.name); err != nil {
 			log.Printf("%s not found (build failure?) - skipping", c.name)
-			failed = append(failed, c.name)
+			failed[c.name] = "MISSING"
 			continue
 		}
 
@@ -183,8 +183,12 @@ func runSimulations(ctx context.Context, checks []choice) error {
 			if errors.Is(ctx.Err(), context.DeadlineExceeded) {
 				log.Printf("%s timed out as expected: %v", c.name, err)
 			} else {
+				if exiterr, ok := err.(*exec.ExitError); ok {
+					failed[c.name] = fmt.Sprintf("EXITCODE_%d", exiterr.ExitCode())
+				} else {
+					failed[c.name] = fmt.Sprintf("ERR_%s", err)
+				}
 				log.Printf("%s failed: %v", c.name, err)
-				failed = append(failed, c.name)
 			}
 		} else {
 			log.Printf("%s exited successfully", c.name)
@@ -194,10 +198,16 @@ func runSimulations(ctx context.Context, checks []choice) error {
 		time.Sleep(1 * time.Second)
 	}
 
-	if len(failed) > 0 {
-		return fmt.Errorf("%d of %d checks failed: %s", len(failed), len(checks), strings.Join(failed, ", "))
+	title := fmt.Sprintf("CHECKS COMPLETE - %d of %d checks failed", len(failed), len(checks))
+	announce(title)
+
+	for _, c := range checks {
+		state := failed[c.name]
+		if state == "" {
+			state = "SUCCESS"
+		}
+		fmt.Printf("%-30.30s: %s\n", c.name, state)
 	}
 
-	log.Printf("wow, everything just worked? amazing.")
 	return nil
 }

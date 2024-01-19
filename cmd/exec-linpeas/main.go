@@ -1,3 +1,4 @@
+// Downloads and launches LinPEAS
 package main
 
 import (
