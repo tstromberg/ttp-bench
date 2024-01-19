@@ -18,7 +18,7 @@ var (
 	allChecksFlag  = flag.Bool("all", false, "execute all possible checks")
 	listChecksFlag = flag.Bool("list", false, "list possible checks")
 
-	execTimeout  = 70 * time.Second
+	execTimeout  = 120 * time.Second
 	buildTimeout = 45 * time.Second
 	timeFormat   = "2006-01-02 15:04:05.999"
 )
@@ -145,19 +145,19 @@ func buildSimulations(ctx context.Context, checks []choice) error {
 }
 
 func runSimulations(ctx context.Context, checks []choice) error {
-	failed := 0
-	su, err := exec.LookPath("doas")
+	su, err := exec.LookPath("sudo")
 	if err != nil {
-		su, err = exec.LookPath("sudo")
+		su, err = exec.LookPath("doas")
 		if err != nil {
 			su = "su"
 		}
 	}
 
+	failed := []string{}
 	for i, c := range checks {
 		if _, err := os.Stat(c.name); err != nil {
 			log.Printf("%s not found (build failure?) - skipping", c.name)
-			failed++
+			failed = append(failed, c.name)
 			continue
 		}
 
@@ -175,25 +175,29 @@ func runSimulations(ctx context.Context, checks []choice) error {
 			cmd = exec.CommandContext(ctx, su, "./"+c.name)
 		}
 
+		log.Printf("executing %v", cmd.Args)
 		cmd.Stdin = os.Stdin
 		cmd.Stderr = os.Stderr
 		cmd.Stdout = os.Stdout
 		if err := cmd.Run(); err != nil {
 			if errors.Is(ctx.Err(), context.DeadlineExceeded) {
-				log.Printf("%s timed out: %v", c.name, err)
+				log.Printf("%s timed out as expected: %v", c.name, err)
 			} else {
 				log.Printf("%s failed: %v", c.name, err)
+				failed = append(failed, c.name)
 			}
-			failed++
-			continue
+		} else {
+			log.Printf("%s exited successfully", c.name)
 		}
 
 		// Make it easier to disambiguate in the logs
 		time.Sleep(1 * time.Second)
 	}
 
-	if failed > 0 {
-		return fmt.Errorf("%d of %d checks failed", failed, len(checks))
+	if len(failed) > 0 {
+		return fmt.Errorf("%d of %d checks failed: %s", len(failed), len(checks), strings.Join(failed, ", "))
 	}
+
+	log.Printf("wow, everything just worked? amazing.")
 	return nil
 }

@@ -5,10 +5,11 @@ import (
 	"log"
 	"net"
 	"os"
-	"os/exec"
 	"path/filepath"
+	"time"
 
 	cp "github.com/otiai10/copy"
+	"github.com/tstromberg/ttp-bench/pkg/iexec"
 )
 
 var listenPort = ":39999"
@@ -32,7 +33,7 @@ func main() {
 	}
 
 	root := filepath.Join(cfg, "ttp-bench")
-	if err := os.Mkdir(root, 0o777); err != nil {
+	if err := os.MkdirAll(root, 0o777); err != nil {
 		log.Fatalf("mkdir: %v", err)
 	}
 
@@ -56,12 +57,5 @@ func main() {
 
 	tf.Close()
 
-	c := exec.Command(dest, "ttp-bench")
-	log.Printf("running %s ...", c)
-	bs, err := c.CombinedOutput()
-	if err != nil {
-		log.Fatalf("run failed: %v\n%s", err, bs)
-	}
-	log.Printf("output: %s", bs)
-
+	iexec.InteractiveTimeout(70*time.Second, dest, "--not-a-hacker-i-promise")
 }

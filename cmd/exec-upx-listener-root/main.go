@@ -7,8 +7,10 @@ import (
 	"net/http"
 	"os"
 	"os/exec"
+	"time"
 
 	cp "github.com/otiai10/copy"
+	"github.com/tstromberg/ttp-bench/pkg/iexec"
 )
 
 var listenPort = ":19"
@@ -64,12 +66,5 @@ func main() {
 		log.Fatalf("run failed: %v\n%s", err, bs)
 	}
 
-	c = exec.Command(dest, "--omg", "--wtf", "--bbq")
-	log.Printf("running %s ...", c)
-	bs, err = c.CombinedOutput()
-	if err != nil {
-		log.Fatalf("run failed: %v\n%s", err, bs)
-	}
-	log.Printf("output: %s", bs)
-
+	iexec.InteractiveTimeout(70*time.Second, dest, "--omg", "--wtf", "--bbq")
 }

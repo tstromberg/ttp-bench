@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"log"
 	"os"
+	"os/exec"
 	"runtime"
 	"time"
 
@@ -26,10 +27,15 @@ func Traitor(args ...string) error {
 		return fmt.Errorf("chmod failed: %v", err)
 	}
 
+	c := exec.Command("strip", bin)
+	if err := c.Run(); err != nil {
+		log.Printf("strip failed: %v", err)
+	}
+
 	defer func() {
 		log.Printf("removing %s", bin)
 		os.Remove(bin)
 	}()
 
-	return iexec.InteractiveTimeout(30*time.Second, "./"+bin, args...)
+	return iexec.InteractiveTimeout(75*time.Second, "./"+bin, args...)
 }

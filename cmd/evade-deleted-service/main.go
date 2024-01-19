@@ -24,7 +24,7 @@ func main() {
 		log.Printf("%s returned error: %v (don't care)", url, err)
 	}
 
-	timeout := 45 * time.Second
+	timeout := 70 * time.Second
 	log.Printf("waiting around for %s ...", timeout)
 	time.Sleep(timeout)
 }

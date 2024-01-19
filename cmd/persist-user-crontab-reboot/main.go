@@ -46,7 +46,7 @@ func main() {
 		os.Remove(dest)
 	}()
 
-	wait := 15 * time.Second
+	wait := 60 * time.Second
 	log.Printf("resting for %s ...", wait)
 	time.Sleep(wait)
 }

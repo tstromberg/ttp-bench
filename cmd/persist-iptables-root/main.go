@@ -18,7 +18,7 @@ func main() {
 	}
 	log.Printf("output: %s", bs)
 
-	time.Sleep(15 * time.Second)
+	time.Sleep(70 * time.Second)
 
 	c = exec.Command("iptables", "-D", "INPUT", "-p", "tcp", "--dport", "12345", "-j", "ACCEPT")
 	log.Printf("running %s ...", c)
