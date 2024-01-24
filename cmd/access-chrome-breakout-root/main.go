@@ -1,4 +1,8 @@
+//go:build linux
+
 // Simulates an overflow where Google Chrome spawns a shell [T1189]
+//
+// Currently broken/disabled on macOS due to file permission changes
 package main
 
 import (

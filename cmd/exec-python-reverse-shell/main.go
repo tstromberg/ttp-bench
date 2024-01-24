@@ -1,6 +1,6 @@
 //go:build !windows
 
-// Launches a temporary reverse shell using bash
+// Launches a temporary reverse shell using Python
 package main
 
 import (

@@ -1,4 +1,4 @@
-// New unsigned binary listening from a hidden directory
+// New unsigned obfuscated binary listening from a hidden directory as root
 package main
 
 import (

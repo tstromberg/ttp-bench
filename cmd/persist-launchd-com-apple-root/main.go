@@ -1,6 +1,6 @@
 //go:build darwin
 
-// Simulates a command inserting itself into the system launchd as a fake unsigned Apple service
+// Simulates persistance via a fake unsigned Apple launchd service
 package main
 
 import (

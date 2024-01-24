@@ -1,4 +1,4 @@
-// New unsigned binary listening from a hidden directory
+// Simulates a PyPI supply chain attack using a modified real-world sample
 package main
 
 import (

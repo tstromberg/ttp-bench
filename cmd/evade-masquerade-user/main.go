@@ -1,4 +1,4 @@
-// Simulates process masquerading as a kernel thread [T1036.004]
+// Simulates process masquerading as another user process [T1036.004]
 package main
 
 import (
