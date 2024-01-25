@@ -4,6 +4,8 @@
 
 ttp-bench simulates 30 popular tactics from both the [MITRE ATT&CK framework](https://attack.mitre.org/) and published defense research. All of the simulations behave at least vaguely suspicious, such as stealing GCP credentials, sniffing your keyboard, accessing unusual DNS servers, or pretending to be a kernel process. Most simulations have multiple suspicious characteristics that lend themselves toward alerting, such as being unsigned binaries that just magically appeared on disk. How many of these simulations will your intrusion detection system detect?
 
+A similar open-source project is [Atomic Red Team](https://github.com/redcanaryco/atomic-red-team):  which did not support Linux or macOS when ttp-bench was created. It's a bit complicated to setup and there isn't much overlap between the techniques used, so both projects remain useful in 2024.
+
 ## Screenshots
 
 ![choices](./images/ioc-choices.png)
