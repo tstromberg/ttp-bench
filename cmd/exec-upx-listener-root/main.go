@@ -66,5 +66,14 @@ func main() {
 		log.Fatalf("run failed: %v\n%s", err, bs)
 	}
 
-	iexec.InteractiveTimeout(70*time.Second, dest, "--omg", "--wtf", "--bbq")
+	// macOS will kill this process: https://github.com/upx/upx/issues/424
+	//
+	// ASP: Security policy would not allow process: 55547, /private/var/tmp/.XXXX3857572708
+	//
+	// We've kept this check on macOS because it's still a test to see if
+	// a SIEM or EDR is relaying these security policy interceptions.
+	err = iexec.InteractiveTimeout(62*time.Second, dest, "--omg", "--wtf", "--bbq")
+	if err != nil {
+		log.Fatalf("err: %v (possibly killed by SIP?)", err)
+	}
 }
