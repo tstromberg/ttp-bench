@@ -5,7 +5,7 @@ import (
 	"log"
 
 	"github.com/zellyn/kooky"
-	_ "github.com/zellyn/kooky/allbrowsers"
+	_ "github.com/zellyn/kooky/browser/all"
 )
 
 func main() {
