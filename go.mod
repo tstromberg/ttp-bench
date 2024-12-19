@@ -1,6 +1,6 @@
 module github.com/tstromberg/ttp-bench
 
-go 1.23
+go 1.23.2
 
 require (
 	github.com/MarinX/keylogger v0.0.0-20240620105846-48ca9d01f566
