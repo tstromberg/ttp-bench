@@ -8,8 +8,8 @@ import (
 	"log"
 	"time"
 
-	"github.com/likexian/doh-go"
-	"github.com/likexian/doh-go/dns"
+	"github.com/likexian/doh"
+	"github.com/likexian/doh/dns"
 )
 
 func DNSOverHTTPS() error {

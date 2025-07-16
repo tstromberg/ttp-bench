@@ -4,8 +4,8 @@ package main
 import (
 	"log"
 
-	"github.com/zellyn/kooky"
-	_ "github.com/zellyn/kooky/allbrowsers"
+	"github.com/browserutils/kooky"
+	_ "github.com/browserutils/kooky/browser/all"
 )
 
 func main() {
