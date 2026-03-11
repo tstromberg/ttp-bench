@@ -4,7 +4,7 @@ go 1.24.2
 
 require (
 	github.com/MarinX/keylogger v0.0.0-20240620105846-48ca9d01f566
-	github.com/browserutils/kooky v0.2.5
+	github.com/browserutils/kooky v0.2.6
 	github.com/cavaliergopher/grab/v3 v3.0.1
 	github.com/charmbracelet/bubbles v1.0.0
 	github.com/charmbracelet/bubbletea v1.3.10
